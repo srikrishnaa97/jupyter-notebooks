@@ -1,0 +1,170 @@
+Database        : crn:v1:bluemix:public:dashdb-for-transactions:eu-gb:a/0e2bc128646c4811a0b0dcefd7fec039:57518255-8452-43f6-98f3-36fce4b2eb00::
+Host name       : db2-icd-prod-eu-gb-db-wuoff-private-alb.db2.databases.appdomain.cloud                                                        
+Authorization Id: yqy67063                                                                                                                     
+Run method      : JDBC                                                                                                                         
+Date            : Jan 5, 2022 6:18:45 PM                                                                                                       
+Status          : completed                                                                                                                    
+
+SELECT UNIQUE(LAUNCH_SITE) from SPACEXTBL
+
+SELECT * from SPACEXTBL WHERE LAUNCH_SITE LIKE 'CCA%' LIMIT 5
+
+SELECT SUM(PAYLOAD_MASS__KG_) from SPACEXTBL WHERE CUSTOMER = 'NASA (CRS)'
+
+SELECT AVG(PAYLOAD_MASS__KG_) from SPACEXTBL WHERE BOOSTER_VERSION LIKE 'F9 v1.1%'
+
+SELECT MIN(DATE) from SPACEXTBL WHERE "Landing _Outcome" = 'Success (ground pad)'
+
+SELECT BOOSTER_VERSION,PAYLOAD_MASS__KG_ FROM SPACEXTBL WHERE "Landing _Outcome" = 'Success (drone ship)' AND PAYLOAD_MASS__KG_ BETWEEN 4000 AND 6000
+
+SELECT UNIQUE(MISSION_OUTCOME),COUNT(*) from SPACEXTBL GROUP BY MISSION_OUTCOME
+
+SELECT BOOSTER_VERSION,PAYLOAD_MASS__KG_ from SPACEXTBL WHERE PAYLOAD_MASS__KG_ = (SELECT MAX(PAYLOAD_MASS__KG_) from SPACEXTBL)
+
+SELECT DATE, "Landing _Outcome", BOOSTER_VERSION, LAUNCH_SITE from SPACEXTBL WHERE "Landing _Outcome" = 'Failure (drone ship)' AND DATE LIKE '2015-%'
+
+SELECT UNIQUE("Landing _Outcome"), COUNT(*) as ct from SPACEXTBL WHERE DATE BETWEEN '2010-06-04' AND '2017-03-20' GROUP BY "Landing _Outcome" ORDER BY ct DESC
+
+
+
+=======================================================================================
+SELECT UNIQUE(LAUNCH_SITE) from SPACEXTBL
+
+Run time (seconds): 0.070    
+Status            : succeeded
+
+LAUNCH_SITE 
+------------
+CCAFS LC-40 
+CCAFS SLC-40
+KSC LC-39A  
+VAFB SLC-4E 
+
+
+=======================================================================================
+SELECT * from SPACEXTBL WHERE LAUNCH_SITE LIKE 'CCA%' LIMIT 5
+
+Run time (seconds): 0.011    
+Status            : succeeded
+
+DATE       Time (UTC) BOOSTER_VERSION LAUNCH_SITE PAYLOAD                                                       PAYLOAD_MASS__KG_ ORBIT     CUSTOMER        MISSION_OUTCOME Landing _Outcome   
+---------- ---------- --------------- ----------- ------------------------------------------------------------- ----------------- --------- --------------- --------------- -------------------
+2010-06-04 18:45:00   F9 v1.0  B0003  CCAFS LC-40 Dragon Spacecraft Qualification Unit                                          0 LEO       SpaceX          Success         Failure (parachute)
+2010-12-08 15:43:00   F9 v1.0  B0004  CCAFS LC-40 Dragon demo flight C1, two CubeSats, barrel of Brouere cheese                 0 LEO (ISS) NASA (COTS) NRO Success         Failure (parachute)
+2012-05-22 07:44:00   F9 v1.0  B0005  CCAFS LC-40 Dragon demo flight C2                                                       525 LEO (ISS) NASA (COTS)     Success         No attempt         
+2012-10-08 00:35:00   F9 v1.0  B0006  CCAFS LC-40 SpaceX CRS-1                                                                500 LEO (ISS) NASA (CRS)      Success         No attempt         
+2013-03-01 15:10:00   F9 v1.0  B0007  CCAFS LC-40 SpaceX CRS-2                                                                677 LEO (ISS) NASA (CRS)      Success         No attempt         
+
+
+=======================================================================================
+SELECT SUM(PAYLOAD_MASS__KG_) from SPACEXTBL WHERE CUSTOMER = 'NASA (CRS)'
+
+Run time (seconds): 0.008    
+Status            : succeeded
+
+1    
+-----
+45596
+
+
+=======================================================================================
+SELECT AVG(PAYLOAD_MASS__KG_) from SPACEXTBL WHERE BOOSTER_VERSION LIKE 'F9 v1.1%'
+
+Run time (seconds): 0.006    
+Status            : succeeded
+
+1   
+----
+2534
+
+
+=======================================================================================
+SELECT MIN(DATE) from SPACEXTBL WHERE "Landing _Outcome" = 'Success (ground pad)'
+
+Run time (seconds): 0.007    
+Status            : succeeded
+
+1         
+----------
+2015-12-22
+
+
+=======================================================================================
+SELECT BOOSTER_VERSION,PAYLOAD_MASS__KG_ FROM SPACEXTBL WHERE "Landing _Outcome" = 'Success (drone ship)' AND PAYLOAD_MASS__KG_ BETWEEN 4000 AND 6000
+
+Run time (seconds): 0.007    
+Status            : succeeded
+
+BOOSTER_VERSION PAYLOAD_MASS__KG_
+--------------- -----------------
+F9 FT B1022                  4696
+F9 FT B1026                  4600
+F9 FT  B1021.2               5300
+F9 FT  B1031.2               5200
+
+
+=======================================================================================
+SELECT UNIQUE(MISSION_OUTCOME),COUNT(*) from SPACEXTBL GROUP BY MISSION_OUTCOME
+
+Run time (seconds): 0.008    
+Status            : succeeded
+
+MISSION_OUTCOME                  2 
+-------------------------------- --
+Failure (in flight)               1
+Success                          99
+Success (payload status unclear)  1
+
+
+=======================================================================================
+SELECT BOOSTER_VERSION,PAYLOAD_MASS__KG_ from SPACEXTBL WHERE PAYLOAD_MASS__KG_ = (SELECT MAX(PAYLOAD_MASS__KG_) from SPACEXTBL)
+
+Run time (seconds): 0.009    
+Status            : succeeded
+
+BOOSTER_VERSION PAYLOAD_MASS__KG_
+--------------- -----------------
+F9 B5 B1048.4               15600
+F9 B5 B1049.4               15600
+F9 B5 B1051.3               15600
+F9 B5 B1056.4               15600
+F9 B5 B1048.5               15600
+F9 B5 B1051.4               15600
+F9 B5 B1049.5               15600
+F9 B5 B1060.2               15600
+F9 B5 B1058.3               15600
+F9 B5 B1051.6               15600
+F9 B5 B1060.3               15600
+F9 B5 B1049.7               15600
+
+
+=======================================================================================
+SELECT DATE, "Landing _Outcome", BOOSTER_VERSION, LAUNCH_SITE from SPACEXTBL WHERE "Landing _Outcome" = 'Failure (drone ship)' AND DATE LIKE '2015-%'
+
+Run time (seconds): 0.008    
+Status            : succeeded
+
+DATE       Landing _Outcome     BOOSTER_VERSION LAUNCH_SITE
+---------- -------------------- --------------- -----------
+2015-01-10 Failure (drone ship) F9 v1.1 B1012   CCAFS LC-40
+2015-04-14 Failure (drone ship) F9 v1.1 B1015   CCAFS LC-40
+
+
+=======================================================================================
+SELECT UNIQUE("Landing _Outcome"), COUNT(*) as ct from SPACEXTBL WHERE DATE BETWEEN '2010-06-04' AND '2017-03-20' GROUP BY "Landing _Outcome" ORDER BY ct DESC
+
+Run time (seconds): 0.009    
+Status            : succeeded
+
+Landing _Outcome       CT
+---------------------- --
+No attempt             10
+Failure (drone ship)    5
+Success (drone ship)    5
+Controlled (ocean)      3
+Success (ground pad)    3
+Failure (parachute)     2
+Uncontrolled (ocean)    2
+Precluded (drone ship)  1
+
+
